@@ -5,6 +5,7 @@ function Board() {
   //return{}内部をindex.tsxに渡す
   return (
     //複数のJSX要素は<> </>で囲む必要がある
+    // Do props 
     <>
       <div className="board-row">
         <button className="square">1</button>
