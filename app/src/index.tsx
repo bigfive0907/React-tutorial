@@ -1,7 +1,7 @@
 //node_modules内のディレクトリからimportしている
 import React from "react";
 //Webブラウザとやりとりするライブラリ
-import ReactDOM from "react-dom/client"; 
+import ReactDOM from "react-dom/client";
 import "./index.css";
 import Board from "./App";
 
