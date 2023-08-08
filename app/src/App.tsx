@@ -1,4 +1,3 @@
-import React from "react";
 import { useState } from "react";
 import "./App.css";
 
@@ -6,6 +5,11 @@ type Props = {
   value: string;
   onSquareClick: any;
 };
+type BoardProps = {
+  xIsNext: boolean;
+  squares: string[];
+  onPlay: any;
+}
 
 // DRY
 const Square = (props: Props) => {
@@ -16,44 +20,33 @@ const Square = (props: Props) => {
   );
 };
 
-const Board = () => {
-  // 初期化
-  const [xIsNext, setxIsNext] = useState(true);
-  const [squares, setSquares] = useState(Array(9).fill(""));
+const Board = (props:BoardProps) => {
 
   // ボタンが押された時の処理
   const handleClick = (squareNumber: number) => {
-    if(squares[squareNumber] || calculateWinner(squares)) {
+    if(props.squares[squareNumber] || calculateWinner(props.squares)) {
       return;
     }
-    let nextSquares = squares.slice();
+    let nextSquares = props.squares.slice();
       //入力値反転
-    if(xIsNext) {
+    if(props.xIsNext) {
       nextSquares[squareNumber] = "X";
     }
     else {
       nextSquares[squareNumber] = "O";
     }
+    props.onPlay(nextSquares);
 
-    setxIsNext(!xIsNext);
-    setSquares(nextSquares);
   };
 
-  // 盤面をリセットする処理
-  const resetSquares = () => {
-    let nullSquares = squares.slice();
-    nullSquares.fill("");
-    setxIsNext(true);
-    setSquares(nullSquares);
-  };
 
-  const winner = calculateWinner(squares);
+  const winner = calculateWinner(props.squares);
   let status;
   if(winner) {
     status = "Winner is " + winner + " !";
   }
   else {
-    status = "Next player is " + (xIsNext ? "X" : "O");
+    status = "Next player is " + (props.xIsNext ? "X" : "O");
   }
   //return{}内部をindex.tsxに渡す
   return (
@@ -62,27 +55,24 @@ const Board = () => {
     <>
       <div className="status">{status}</div>
       <div className="board-row">
-        <Square value={squares[0]} onSquareClick={() => {handleClick(0)}} />
-        <Square value={squares[1]} onSquareClick={() => {handleClick(1)}} />
-        <Square value={squares[2]} onSquareClick={() => {handleClick(2)}} />
+        <Square value={props.squares[0]} onSquareClick={() => {handleClick(0)}} />
+        <Square value={props.squares[1]} onSquareClick={() => {handleClick(1)}} />
+        <Square value={props.squares[2]} onSquareClick={() => {handleClick(2)}} />
       </div>
       <div className="board-row">
-        <Square value={squares[3]} onSquareClick={() => {handleClick(3)}} />
-        <Square value={squares[4]} onSquareClick={() => {handleClick(4)}} />
-        <Square value={squares[5]} onSquareClick={() => {handleClick(5)}} />
+        <Square value={props.squares[3]} onSquareClick={() => {handleClick(3)}} />
+        <Square value={props.squares[4]} onSquareClick={() => {handleClick(4)}} />
+        <Square value={props.squares[5]} onSquareClick={() => {handleClick(5)}} />
       </div>
       <div className="board-row">
-        <Square value={squares[6]} onSquareClick={() => {handleClick(6)}} />
-        <Square value={squares[7]} onSquareClick={() => {handleClick(7)}} />
-        <Square value={squares[8]} onSquareClick={() => {handleClick(8)}} />
+        <Square value={props.squares[6]} onSquareClick={() => {handleClick(6)}} />
+        <Square value={props.squares[7]} onSquareClick={() => {handleClick(7)}} />
+        <Square value={props.squares[8]} onSquareClick={() => {handleClick(8)}} />
       </div>
-      <button className="Reset" onClick={resetSquares}>
+      <button className="Reset">
         Reset
       </button>
 
-      <div className="history">
-        <History />
-      </div>
     </>
   );
 };
@@ -114,20 +104,28 @@ const calculateWinner = (squares:string[]) => {
 };
 
 // 対局後の振り返り
-const History = () => {
-  const [count ,setCount] = useState(1);
-  const saveHistory = () => {
-    // countを増やす
-    setCount(count+1);
-  };
+export default function Game() {
+  const [xIsNext, setXIsNext] = useState(true);
+  const [history, setHistory] = useState([Array(9).fill(null)]);
+  const currentSquares = history[history.length -1];
 
-  // Historyを返す
+  function handlePlay(nextSquares: any) {
+    // historyの要素の後にnextSquaresを繋げた配列を作成
+    setHistory([...history, nextSquares]);
+    setXIsNext(!xIsNext);
+  }
+
+
   return (
-    <button className="history">
-      go back # + {count}
-    </button>
+    <div className="game">
+      <div className="game-board">
+        <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
+      </div>
+      <div className="game-info">
+        <ol>{/*TODO*/}</ol>
+      </div>
+    </div>
   );
 }
 
-export default Board;
 

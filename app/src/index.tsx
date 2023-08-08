@@ -3,7 +3,7 @@ import React from "react";
 //Webブラウザとやりとりするライブラリ
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import Board from "./App";
+import Game from "./App";
 
 // Compose App component here
 const root = ReactDOM.createRoot(
@@ -11,7 +11,7 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <Board />
+    <Game />
   </React.StrictMode>
 );
 
