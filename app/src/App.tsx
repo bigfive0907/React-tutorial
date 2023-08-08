@@ -23,6 +23,7 @@ const Square = (props: Props) => {
 const Board = (props: BoardProps) => {
   // ボタンが押された時の処理
   // TODO : 初手は真ん中のマスに置けないようにする
+
   const handleClick = (squareNumber: number) => {
     if (props.squares[squareNumber] || calculateWinner(props.squares)) {
       return;
@@ -39,9 +40,13 @@ const Board = (props: BoardProps) => {
 
   const winner = calculateWinner(props.squares);
   let status;
-  if (winner) {
+  if (typeof winner === 'string') {
     status = "Winner is " + winner + " !";
-  } else {
+  }
+  else if(typeof winner === 'boolean'){
+    status = (props.xIsNext ? "O":"X") + " is Reached !";
+  }
+  else {
     status = "Next player is " + (props.xIsNext ? "X" : "O");
   }
   //return{}内部をindex.tsxに渡す
@@ -132,18 +137,30 @@ const calculateWinner = (squares: string[]) => {
   for (let i = 0; i < winLines.length; i++) {
     const [first, second, third] = winLines[i];
     // TODO 置いたら勝ちになるマスの背景を赤くする
+
     if (
       squares[first] &&
       squares[first] === squares[second] &&
       squares[second] === squares[third]
     ) {
+
       return squares[first];
     }
+
+    else if(
+      (
+      (squares[first] && !squares[second]&&  squares[third] && squares[first] === squares[third])||
+      (squares[second] && !squares[first]&&  squares[third] && squares[second] === squares[third])||
+      (squares[first] && !squares[third]&&  squares[second] && squares[first] === squares[second]))
+
+    ){
+      return false;
+    }
   }
+
   return null;
 };
 
-// 対局後の振り返り
 export default function Game() {
   const [history, setHistory] = useState([Array(9).fill(null)]);
   const [currentMove, setCurrentMove] = useState(0);
@@ -170,7 +187,7 @@ export default function Game() {
     }
     return (
       <li key={move}>
-        <button onClick={() => jumpTo(move)}>{description}</button>
+        <button className="history" onClick={() => jumpTo(move)}>{description}</button>
       </li>
     );
   });
