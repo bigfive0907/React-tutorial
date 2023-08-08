@@ -4,17 +4,25 @@ import "./App.css";
 type Props = {
   value: string;
   onSquareClick: any;
+  color: string;
+  toggle:any;
 };
 type BoardProps = {
   xIsNext: boolean;
   squares: string[];
   onPlay: any;
+  toggle: any;
+  color: string;
 };
 
 // DRY
 const Square = (props: Props) => {
+  const toggleColor =() =>{
+    //TODO
+  }
+  //props.toggle();
   return (
-    <button className={`square`} onClick={props.onSquareClick}>
+    <button className={`square ${props.color}`} onClick={props.onSquareClick}>
       {props.value}
     </button>
   );
@@ -23,6 +31,7 @@ const Square = (props: Props) => {
 const Board = (props: BoardProps) => {
   // ボタンが押された時の処理
   // TODO : 初手は真ん中のマスに置けないようにする
+  // colorOX ="black";
 
   const handleClick = (squareNumber: number) => {
     if (
@@ -38,10 +47,13 @@ const Board = (props: BoardProps) => {
     if (props.xIsNext) {
       //classNameに属性を追加したい
       nextSquares[squareNumber] = "X";
+      //props.color = "blue";
     } else {
       nextSquares[squareNumber] = "O";
+      //props.toggle();
+      //props.color = "red";
     }
-    props.onPlay(nextSquares);
+    props.onPlay(nextSquares, props.color);
   };
 
   const winner = calculateWinner(props.squares);
@@ -59,24 +71,29 @@ const Board = (props: BoardProps) => {
   //return{}内部をindex.tsxに渡す
   return (
     //複数のJSX要素は<> </>で囲む必要がある
-    // Do props
+
     <>
       <div className="status">{status}</div>
       <div className="board-row">
         <Square
           value={props.squares[0]}
+          color={props.color}
           onSquareClick={() => {
             handleClick(0);
           }}
         />
         <Square
           value={props.squares[1]}
+          color={props.color}
+          toggle={toggleColor}
           onSquareClick={() => {
             handleClick(1);
           }}
         />
         <Square
           value={props.squares[2]}
+          color={props.color}
+          toggle={toggleColor}
           onSquareClick={() => {
             handleClick(2);
           }}
@@ -85,18 +102,24 @@ const Board = (props: BoardProps) => {
       <div className="board-row">
         <Square
           value={props.squares[3]}
+          color={props.color}
+          toggle={toggleColor}
           onSquareClick={() => {
             handleClick(3);
           }}
         />
         <Square
           value={props.squares[4]}
+          color={props.color}
+          toggle={toggleColor}
           onSquareClick={() => {
             handleClick(4);
           }}
         />
         <Square
           value={props.squares[5]}
+          color={props.color}
+          toggle={toggleColor}
           onSquareClick={() => {
             handleClick(5);
           }}
@@ -105,18 +128,24 @@ const Board = (props: BoardProps) => {
       <div className="board-row">
         <Square
           value={props.squares[6]}
+          color={props.color}
+          toggle={toggleColor}
           onSquareClick={() => {
             handleClick(6);
           }}
         />
         <Square
           value={props.squares[7]}
+          color={props.color}
+          toggle={toggleColor}
           onSquareClick={() => {
             handleClick(7);
           }}
         />
         <Square
           value={props.squares[8]}
+          color={props.color}
+          toggle={toggleColor}
           onSquareClick={() => {
             handleClick(8);
           }}
@@ -215,7 +244,12 @@ export default function Game() {
   return (
     <div className="game">
       <div className="game-board">
-        <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
+        <Board
+          xIsNext={xIsNext}
+          squares={currentSquares}
+          color={colorOX)
+          onPlay={handlePlay}
+        />
       </div>
       <div className="game-info">
         <ul>{moves}</ul>
