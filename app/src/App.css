@@ -1,21 +1,22 @@
 /*App.tsxに関するCSSを記述*/
 .Game {
-  /*text-align: center;*/
+  text-align: center;
 }
 ul {
   list-style-type: none;
 }
 
 button.square {
-  width: 200px;
-  height: 200px;
-  font-size: 150px;
+  width: 150px;
+  height: 150px;
+  font-size: 100px;
   background-color: whitesmoke;
   vertical-align: middle;
 }
 
 button.square:hover{
   background-color: #c7c7c7;
+  cursor: pointer;
 }
 
 .history {

@@ -4,17 +4,19 @@ import "./App.css";
 type Props = {
   value: string;
   onSquareClick: any;
+  color: string;
 };
 type BoardProps = {
   xIsNext: boolean;
   squares: string[];
   onPlay: any;
+  color: string;
 };
 
 // DRY
 const Square = (props: Props) => {
   return (
-    <button className={`square`} onClick={props.onSquareClick}>
+    <button className={`square ${props.color}`} onClick={props.onSquareClick}>
       {props.value}
     </button>
   );
@@ -23,6 +25,7 @@ const Square = (props: Props) => {
 const Board = (props: BoardProps) => {
   // ボタンが押された時の処理
   // TODO : 初手は真ん中のマスに置けないようにする
+  //colorOX ="black";
 
   const handleClick = (squareNumber: number) => {
     if (
@@ -38,10 +41,12 @@ const Board = (props: BoardProps) => {
     if (props.xIsNext) {
       //classNameに属性を追加したい
       nextSquares[squareNumber] = "X";
+      props.color = "blue";
     } else {
       nextSquares[squareNumber] = "O";
+      //props.color = "red";
     }
-    props.onPlay(nextSquares);
+    props.onPlay(nextSquares, props.color);
   };
 
   const winner = calculateWinner(props.squares);
@@ -65,18 +70,21 @@ const Board = (props: BoardProps) => {
       <div className="board-row">
         <Square
           value={props.squares[0]}
+          color={props.color}
           onSquareClick={() => {
             handleClick(0);
           }}
         />
         <Square
           value={props.squares[1]}
+          color={props.color}
           onSquareClick={() => {
             handleClick(1);
           }}
         />
         <Square
           value={props.squares[2]}
+          color={props.color}
           onSquareClick={() => {
             handleClick(2);
           }}
@@ -85,18 +93,21 @@ const Board = (props: BoardProps) => {
       <div className="board-row">
         <Square
           value={props.squares[3]}
+          color={props.color}
           onSquareClick={() => {
             handleClick(3);
           }}
         />
         <Square
           value={props.squares[4]}
+          color={props.color}
           onSquareClick={() => {
             handleClick(4);
           }}
         />
         <Square
           value={props.squares[5]}
+          color={props.color}
           onSquareClick={() => {
             handleClick(5);
           }}
@@ -105,18 +116,21 @@ const Board = (props: BoardProps) => {
       <div className="board-row">
         <Square
           value={props.squares[6]}
+          color={props.color}
           onSquareClick={() => {
             handleClick(6);
           }}
         />
         <Square
           value={props.squares[7]}
+          color={props.color}
           onSquareClick={() => {
             handleClick(7);
           }}
         />
         <Square
           value={props.squares[8]}
+          color={props.color}
           onSquareClick={() => {
             handleClick(8);
           }}
@@ -185,7 +199,11 @@ export default function Game() {
   const [currentMove, setCurrentMove] = useState(0);
   const xIsNext = currentMove % 2 === 0;
   const currentSquares = history[currentMove];
+  const [colorOX, setColorOX] = useState("blue");
 
+  /*const toggleColor = () => {
+    if (!xIsNext) setColorOX("red");
+  };*/
   const handlePlay = (nextSquares: any) => {
     // historyの要素の後にnextSquaresを繋げた配列を作成
     const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
@@ -215,7 +233,12 @@ export default function Game() {
   return (
     <div className="game">
       <div className="game-board">
-        <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
+        <Board
+          xIsNext={xIsNext}
+          squares={currentSquares}
+          color={colorOX}
+          onPlay={handlePlay}
+        />
       </div>
       <div className="game-info">
         <ul>{moves}</ul>
